@@ -2,8 +2,6 @@
     to your site with Javascript */
 
 // prints a message in the browser's dev tools console
-console.log("Hello 🌎");
-var nodes,edges;
 
 
 var container = document.getElementById("mynetwork");
