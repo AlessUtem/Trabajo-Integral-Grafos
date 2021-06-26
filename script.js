@@ -11,11 +11,13 @@ var data = {
   edges: edges
 };
 var nodes = new vis.DataSet([
-  { id: 1, label: "Instalación" },
-  { id: 2, label: "Nodo 2" },
-  { id: 3, label: "Nodo 3" },
-  { id: 4, label: "Nodo 4" },
-  { id: 5, label: "Nodo 5" }
+  { id: "ins", label: "Instalación" },
+  { id: "c1", label: "Centro de distribución 1" },
+  { id: "c2", label: "Centro de distribución 2" },
+  { id: "p1", label: "Punto de venta 1" },
+  { id: "p2", label: "Punto de venta 2" },
+  { id: "p3", label: "Punto de venta 3" },
+  { id: "p4", label: "Punto de venta 4"}
 ]);
 
 var o_nodes = new vis.DataSet(nodes);
@@ -23,15 +25,20 @@ var o_nodes = new vis.DataSet(nodes);
 // create an array with edges
 
 var edges = new vis.DataSet([
-  { id: "1-1", from: 1, to: 2, label: "2" },
-  { id: "1-3", from: 1, to: 4, label: "4" },
-  { id: "1-2", from: 1, to: 3, label: "5" },
-  { id: "2-1", from: 2, to: 5, label: "1" },
-  { id: "3-1", from: 3, to: 5, label: "4" },
-  { id: "5-1", from: 5, to: 4, label: "3" }
+  { id: "ins-c1", from: "ins", to: "c1", label: "2" },
+  { id: "ins-c2", from: "ins", to: "c2", label: "4" },
+  { id: "c1-p1", from: "c1", to: "p1", label: "5" },
+  { id: "c1-p2", from: "c1", to: "p2", label: "1" },
+  { id: "c1-p3", from: "c1", to: "p3", label: "4" },
+  { id: "p1-p2", from: "p1", to: "p2", label: "3" },
+  { id: "p2-p3", from: "p2", to: "p3", label: "3" },
+  { id: "c2-p4", from: "c2", to: "p4", label: "3" }
 ]);
 
-
+data = {
+  nodes: nodes,
+  edges: edges
+};
 
 var options = {
   manipulation: {
