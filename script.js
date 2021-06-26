@@ -1,27 +1,51 @@
-/*
-This is your site JavaScript code - you can add interactivity and carry out processing
-- Initially the JS writes a message to the console, and rotates a button you can add from the README
-*/
+/* If you're feeling fancy you can add interactivity 
+    to your site with Javascript */
 
-// Print a message in the browser's dev tools console each time the page loads
-// Use your menus or right-click / control-click and choose "Inspect" > "Console"
+// prints a message in the browser's dev tools console
 console.log("Hello 🌎");
+var nodes,edges,camino=[],grafoDijkstra;
+var storage = new plog.storages.LocalStorage({ maxSize: 200 });
+plog.useStorage(storage);
 
-/* 
-Make the "Click me!" button rotate when the visitor clicks it:
-- First add the button to the page by following the "Next steps" in the README
-*/
-const btn = document.querySelector("button"); // Get the button from the page
-// Detect clicks on the button
-if (btn) {
-  btn.onclick = function() {
-    // The JS works in conjunction with the 'rotated' code in style.css
-    btn.classList.toggle("rotated");
-  };
-}
+var container = document.getElementById("mynetwork");
 
-// This is a single line JS comment
-/*
-This is a comment that can span multiple lines 
-- use comments to make your own notes!
-*/
+var container = document.getElementById("mynetwork");
+var data = {
+  nodes: nodes,
+  edges: edges
+};
+var nodes = new vis.DataSet([
+  { id: 0, label: "Instalación" },
+  { id: 2, label: "Nodo 2" },
+  { id: 3, label: "Nodo 3" },
+  { id: 4, label: "Nodo 4" },
+  { id: 5, label: "Nodo 5" }
+]);
+
+var o_nodes = new vis.DataSet(nodes);
+
+// create an array with edges
+
+var edges = new vis.DataSet([
+  { id: "1-1", from: 0, to: 2, label: "2" },
+  { id: "1-3", from: 0, to: 4, label: "4" },
+  { id: "1-2", from: 0, to: 3, label: "5" },
+  { id: "2-1", from: 2, to: 5, label: "1" },
+  { id: "3-1", from: 3, to: 5, label: "4" },
+  { id: "5-1", from: 5, to: 4, label: "3" }
+]);
+
+
+
+var options = {
+  manipulation: {
+    enabled: true,
+    addNode: false,
+    addEdge: false,
+    editEdge: false,
+    deleteNode: false,
+    deleteEdge: true
+  }
+};
+var network = new vis.Network(container, data, options);
+network.setOptions(options);
