@@ -41,30 +41,29 @@ data = {
 };
 
  var lat1 = -2;
-var long1 = 77;
+ var long1 = 77;
  var lat2 = 10;
  var long2 = 6;
 
 function getKilometros(lat1,lon1,lat2,lon2)
  {
- let rad = function(x) {return x*Math.PI/180;}
-var R = 6378.137; //Radio de la tierra en km
+let rad = function(x) {return x*Math.PI/180;}
+let R = 6371; //Radio de la tierra en km
    
- var radaux1 = lat2 - lat1
- var radaux2 = lon2 - lon1 
- console.log(radaux1)
- var dLat = rad( radaux1 );
- var dLong = rad( radaux2 );
-    console.log(dLong)
-var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLong/2) * Math.sin(dLong/2);
- var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
- var d = R * c;
+ let radaux1 = (lat2 - lat1)
+ let radaux2 = (lon2 - lon1) 
+ let dLat = rad( radaux1 );
+ let dLong = rad( radaux2 );
+   
+let a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLong/2) * Math.sin(dLong/2);
+ let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+ let d = R * c;
 return d.toFixed(5); //Retorna tres decimales
  }
 
 
 
-console.log(getKilometros())
+console.log(getKilometros(lat1,long1,lat2,long2))
 
 
 
