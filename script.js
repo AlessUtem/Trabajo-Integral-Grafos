@@ -66,21 +66,28 @@ return d.toFixed(5); //Retorna tres decimales
 console.log(getKilometros(lat1,long1,lat2,long2))
 
 
-function handleFileSelect(evt) {
-    var files = evt.target.files; // FileList object
-
-    // files is a FileList of File objects. List some properties.
-    var output = [];
-    for (var i = 0, f; f = files[i]; i++) {
-      output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
-                  f.size, ' bytes, last modified: ',
-                  f.lastModifiedDate.toLocaleDateString(), '</li>');
-    }
-    document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+function leerArchivo(e) {
+  var archivo = e.target.files[0];
+  if (!archivo) {
+    return;
   }
+  var lector = new FileReader();
+  lector.onload = function(e) {
+    var contenido = e.target.result;
+    mostrarContenido(contenido);
+  };
+  lector.readAsText(archivo);
+}
 
-  document.getElementById('files').addEventListener('change', handleFileSelect, false);
+function mostrarContenido(contenido) {
+  var elemento = document.getElementById('contenido-archivo');
+  elemento.innerHTML = contenido;
+}
 
+document.getElementById('file-input')
+  .addEventListener('change', leerArchivo, false);
+
+console.log(file-input);
 
 
 
