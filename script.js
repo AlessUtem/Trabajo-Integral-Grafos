@@ -31,6 +31,7 @@ var edges = new vis.DataSet([
   { id: "c1-p2", from: "c1", to: "p2", label: "1" },
   { id: "c1-p3", from: "c1", to: "p3", label: "4" },
   { id: "p1-p2", from: "p1", to: "p2", label: "3" },
+  { id: "p1-p3", from: "p1", to: "p3", label: "3" },
   { id: "p2-p3", from: "p2", to: "p3", label: "3" },
   { id: "c2-p4", from: "c2", to: "p4", label: "3" }
 ]);
