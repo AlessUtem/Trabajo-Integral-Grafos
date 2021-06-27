@@ -67,20 +67,20 @@ console.log(getKilometros(lat1,long1,lat2,long2))
 
 
 function leerArchivo(e) {
-  var archivo = e.target.files[0];
+  let archivo = e.target.files[0];
   if (!archivo) {
     return;
   }
-  var lector = new FileReader();
+  let lector = new FileReader();
   lector.onload = function(e) {
-    var contenido = e.target.result;
+    let contenido = e.target.result;
     mostrarContenido(contenido);
   };
   lector.readAsText(archivo);
 }
 
 function mostrarContenido(contenido) {
-  var elemento = document.getElementById('contenido-archivo');
+  let elemento = document.getElementById('contenido-archivo');
   elemento.innerHTML = contenido;
 }
 
@@ -88,20 +88,21 @@ document.getElementById('file-input')
   .addEventListener('change', leerArchivo, false);
 
 function leerArchivo2(e) {
-  var archivo = e.target.files[0];
+  let archivo = e.target.files[0];
   if (!archivo) {
     return;
   }
-  var lector = new FileReader();
+  let lector = new FileReader();
   lector.onload = function(e) {
-    var contenido = e.target.result;
+    let contenido = e.target.result;
     mostrarContenido2(contenido);
   };
   lector.readAsText(archivo);
+  
 }
 
 function mostrarContenido2(contenido) {
-  var elemento = document.getElementById('contenido-archivo2');
+  let elemento = document.getElementById('contenido-archivo2');
   elemento.innerHTML = contenido;
 }
 
