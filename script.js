@@ -203,29 +203,120 @@ console.log("AAAA",clusss)
 */
 
 
-function borrar() {
-  var borrar = nodes2.getIds();
-            var aristas=edges2.get();
+function borrar(e) {
+  var borrar = nodes.getIds();
+            var aristas=edges.get();
 if(borrar.length==0){
   return
-}else{
+}else if(e==1){
+  archivo1listo=0;
      for (var i = 0; i < borrar.length; i++) {
           nodes.remove(borrar[i]);
         var contadoraristas = aristas.filter(aristas => aristas.from == borrar[i]);
-          console.log(contadoraristas);
           for (var j = 0; j <contadoraristas.length; j++){
             edges.remove(contadoraristas[j].id);
           }
           
         }
-      
+  nodes.add({ id: "ins",fixed:true,x:0,y:0,label:"estacionamiento",color: "#C2FABC" }),
+                console.log(edges.get());
+
+}else if(e==2&&archivo1listo==1){
+  archivo2listo=0;
+  for (var i = 1; i < borrar.length; i++) {
+        var contadoraristas = aristas.filter(aristas => aristas.from == borrar[i]);
+          for (var j = 0; j <contadoraristas.length; j++){
+            edges.remove(contadoraristas[j].id);
+          }
+          
+        }
+}else if(e==2){
+  archivo2listo=0;
+  for (var i = 0; i < borrar.length; i++) {
+        var contadoraristas = aristas.filter(aristas => aristas.from == borrar[i]);
+          for (var j = 0; j <contadoraristas.length; j++){
+            edges.remove(contadoraristas[j].id);
+          }
+          
+        }
 }
 
-     
-      
 
  }
 
+  function CREARGRAFO(){
+   // borrar();
+ for(let i=0; i<ArrayTipo.length ;i++){
+   var coordenadas=ArrayCoordenada[i].split(",");
+   var coorx=coordenadas[0];
+   var coory=coordenadas[1];
+  if(ArrayTipo[i]=='C'){
+    var tipo = 'C';//'Centro de distribución '
+    edges.add([{id: "ins-"+ArrayTipo[i].concat(ArrayIDTipo[i]),from: "ins", to: ArrayTipo[i].concat(ArrayIDTipo[i]), label: kilometros(0,coorx,0,coory),fixed:{x:coorx,y:-coory}}]);
+  }
+   else{
+     tipo ='Pv ';// 'Punto de venta '
+   }
+   let id = ArrayTipo[i].concat(ArrayIDTipo[i]);
+   let label = tipo + ArrayIDTipo[i];
+   
+   nodes.add([{id: id , label: label,fixed:true,x:coorx,y:-coory }]);
+   console.log(edges.get());
+ } 
+}
+
+  function UNIRGRAFO(){
+  let id,from,to,label;
+  let ins="ins";
+  for(let i=0; i<ArrayIDCentroArchivo.length ;i++){
+    id="C"+ArrayIDCentroArchivo[i]+"-"+"P"+ArrayIDPuntoArchivo[i];
+    from="C"+ArrayIDCentroArchivo[i];
+    to="P"+ArrayIDPuntoArchivo[i];
+    var x1=nodes.get(from).x;
+    console.log(x1);
+    var x2=nodes.get(to).x;
+    var y1=nodes.get(from).y;
+    var y2=nodes.get(to).y;
+    console.log(x1,"-",x2,"-",y1,"-",y2);
+    console.log(kilometros(x1,x2,y1,y2));
+    edges.add([{id: id ,from: from, to: to, label: kilometros(x1,x2,y1,y2)}]);
+  }
+    var options = {
+                     physics: { enabled: true, wind: { x: 1 } },
+
+    };
+    network.setOptions(options);
+
+    var nodos=nodes.getIds();
+      for(let i=0; i<nodos.length ;i++){
+        if(nodos[i]!="ins")
+  nodes.updateOnly({id:nodos[i] ,fixed:false });
+        
+        
+}   /* var nodos =nodes.get()
+    var C =nodos.filter(nodos => nodos.id[0]=="C" );
+    console.log(C);
+    for(let j=0;j<C.length;j++){
+     var x=C[j].x
+     var y=C[j].y
+     
+     edges.add([{id: ins ,from: C[j].id, to: to, label: kilometros(0,x,0,y)+" km"}]);
+   }
+   */
+  }
+function repetido(camino,recorrido){
+  var repetido;
+  for (let k = 0; k < recorrido.length; k++) {
+    if (vertice == recorrido[k]) {
+      
+      repetido = true;
+      break;
+    } else {
+      repetido = false;
+    }
+  }
+  return repetido;
+}
 
 
 var options = {
