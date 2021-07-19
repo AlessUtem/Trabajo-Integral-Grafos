@@ -1,7 +1,7 @@
 var container2 = document.getElementById("mynetwork2");
 
 var nodes2 = new vis.DataSet([
-  { id:"ins", color: "#C2FABC", label: "Instalación" }
+  { id: "ins",fixed:true,x:0,y:0,label:"estacionamiento",color: "#C2FABC" },
 ]);
 
 var edges2 = new vis.DataSet([
@@ -10,13 +10,17 @@ var edges2 = new vis.DataSet([
 data2 = {
   nodes: nodes2,
   edges: edges2
+  
 };
-
-function CREARGRAFO(){
- for(let i=0; i<ArrayTipo.length ;i++){
+function creargrafo2(){
+  for(let i=0; i<ArrayTipo.length ;i++){
+   var coordenadas=ArrayCoordenada[i].split(",");
+   console.log(coordenadas[0]);
+   var coorx=coordenadas[0];
+   var coory=coordenadas[1];
   if(ArrayTipo[i]=='C'){
     var tipo = 'Centro de distribución '
-    edges2.add([{id: "ins-"+ArrayTipo[i].concat(ArrayIDTipo[i]),from: "ins", to: ArrayTipo[i].concat(ArrayIDTipo[i]), label: "2" }]);
+    //edges2.add([{id: "ins-"+ArrayTipo[i].concat(ArrayIDTipo[i]),from: "ins", to: ArrayTipo[i].concat(ArrayIDTipo[i]), label: kilometros(0,coorx,0,coory) ,fixed:{x:coorx,y:coory}}]);
   }
    else{
      tipo = 'Punto de venta '
@@ -24,42 +28,45 @@ function CREARGRAFO(){
    let id = ArrayTipo[i].concat(ArrayIDTipo[i]);
    let label = tipo + ArrayIDTipo[i];
    
-nodes2.add([{id: id , label: label }]);
+nodes2.add([{id: id , label: label,fixed:{x:coorx,y:coory} }]);
         
-}     
+ } 
 }
-
-
-function UNIRGRAFO(){
-  let id,from,to,label;
-  let ins="ins";
-  for(let i=0; i<ArrayIDCentroArchivo.length ;i++){
-    id="C"+ArrayIDCentroArchivo[i]+"-"+"P"+ArrayIDPuntoArchivo[i];
-    from="C"+ArrayIDCentroArchivo[i];
-    to="P"+ArrayIDPuntoArchivo[i];
-    edges2.add([{id: id ,from: from, to: to, label: "1" }]);  
+function aristarepetida(nombre){
+  var repetido;
+  var aristas=edges2.getIds();
+  for (let k = 0; k < aristas.length; k++) {
+    
+    if (nombre == aristas[k]) {
+    console.log(nombre,"==",aristas[k]);
+      repetido = true;
+      break;
+    } else {
+      repetido = false;
+    }
   }
-  
+  return repetido;
   
 }
-
-
-
-
-
-
-
-
+function unirgrafo2(primero,segundo,ncamion){
+  console.log(edges2.getIds());
+  var  cont=0;
+   var nombre="camion"+ncamion+"-"+cont;
+  while(aristarepetida(nombre)==true){
+    cont++;
+    nombre="camion"+ncamion+"-"+cont;
+  }
+  var distancia=kilometros(primero.x,segundo.x,primero.y,segundo.y);
+  edges2.add([{id:nombre ,from: primero.id, to: segundo.id, label:"camion "+ncamion+"("+distancia+")"}]);
+}
 
 var options2 = {
-  manipulation: {
-    enabled: true,
-    addNode: false,
-    addEdge: false,
-    editEdge: false,
-    deleteNode: false,
-    deleteEdge: true
-  }
+ 
+ edges: {
+    arrows: {
+      to: { enabled: true, scaleFactor: 1, type: "arrow" }
+    }
+    }
 };
 
 
