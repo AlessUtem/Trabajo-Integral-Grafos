@@ -1,108 +1,116 @@
 #mynetwork {
-  width: 880px;
+  width: 680px;
   height: 450px;
   border: 10px solid lightblue;
-  background-size: auto;
-  background-position:center;
+  background-size: cover;
+  background-position: center;
 }
 
+#mynetwork2 {
+  display: none;
+  width: 680px;
+  height: 450px;
+  border: 10px solid lightblue;
+  background-size: cover;
+  background-position: center;
+}
+
+#Titulomynetwork2{
+  display: none;
+}
 body {
   margin: 0em;
- font-family: 'Noto Sans', sans-serif;
-  background-color:#f6fafb;
-  
-  
+  font-family: "Noto Sans", sans-serif;
+  background-color: #f6fafb;
 }
 
-h1,h2,h3,h4,h5{
-  font-family: 'Fjalla One', sans-serif;
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: "Fjalla One", sans-serif;
 }
 
 .cover {
-  
-  height:200px;
-  background-image:url(https://cdn.glitch.com/d87b0629-c83c-4b77-8347-bd0bb9929c8b%2Fb07f287999061a4e01c1be81e985690d.png?v=1620221079983);
-  color:white;
+  height: 200px;
+  background-image: url(https://cdn.glitch.com/d87b0629-c83c-4b77-8347-bd0bb9929c8b%2Fb07f287999061a4e01c1be81e985690d.png?v=1620221079983);
+  color: white;
   background-size: cover;
-  background-position:center;
-  background-color:rgba(0,0,0,0.6);
+  background-position: center;
+  background-color: rgba(0, 0, 0, 0.6);
   background-blend-mode: darken;
-  
 }
 
-.cover-small{
-  height:200px;
+.cover-small {
+  height: 200px;
   background-blend-mode: normal;
 }
 
-
-
-footer{
-  margin:0px;
+footer {
+  margin: 0px;
   padding: 0px;
   box-sizing: border-box;
-  background:#202020;
+  background: #202020;
   color: white;
-  width:100%;
-  
-  
+  width: 100%;
 }
 
-.container-footer-all{
-  width:100%;
-  max-width:1600px;
-  margin:auto;
+.container-footer-all {
+  width: 100%;
+  max-width: 1600px;
+  margin: auto;
   padding: 40px;
 }
 
-.container-body{
-  display:flex;
+.container-body {
+  display: flex;
   justify-content: space-between;
-  
-  
 }
 .modalDialog {
-	position: fixed;
-	font-family: Arial, Helvetica, sans-serif;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	background: rgba(0,0,0,0.8);
-	z-index: 99999;
-	opacity:0;
-	-webkit-transition: opacity 400ms ease-in;
-	-moz-transition: opacity 400ms ease-in;
-	transition: opacity 400ms ease-in;
-	pointer-events: none;
+  position: fixed;
+  font-family: Arial, Helvetica, sans-serif;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 99999;
+  opacity: 0;
+  -webkit-transition: opacity 400ms ease-in;
+  -moz-transition: opacity 400ms ease-in;
+  transition: opacity 400ms ease-in;
+  pointer-events: none;
 }
 .modalDialog:target {
-	opacity:1;
-	pointer-events: auto;
+  opacity: 1;
+  pointer-events: auto;
 }
 .modalDialog > div {
-	width: 400px;
-	position: relative;
-	margin: 10% auto;
-	padding: 5px 20px 13px 20px;
-	border-radius: 10px;
-	background: #fff;
-	background: -moz-linear-gradient(#fff, #999);
-	background: -webkit-linear-gradient(#fff, #999);
-	background: -o-linear-gradient(#fff, #999);
+  width: 400px;
+  position: relative;
+  margin: 10% auto;
+  padding: 5px 20px 13px 20px;
+  border-radius: 10px;
+  background: #fff;
+  background: -moz-linear-gradient(#fff, #999);
+  background: -webkit-linear-gradient(#fff, #999);
+  background: -o-linear-gradient(#fff, #999);
   -webkit-transition: opacity 400ms ease-in;
--moz-transition: opacity 400ms ease-in;
-transition: opacity 400ms ease-in;
+  -moz-transition: opacity 400ms ease-in;
+  transition: opacity 400ms ease-in;
 }
 .close {
-	background: #606061;
-	color: #FFFFFF;
-	line-height: 25px;
-	position: absolute;
-	right: -12px;
-	text-align: center;
-	top: -10px;
-	width: 24px;
-	
+  background: #606061;
+  color: #FFFFFF;
+  line-height: 25px;
+  position: absolute;
+  right: -12px;
+  text-align: center;
+  top: -10px;
+  width: 24px;
 }
-.close:hover { background: #00d9ff; }
+.close:hover {
+  background: #00d9ff;
+}
+
