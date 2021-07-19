@@ -253,7 +253,7 @@ if(borrar.length==0){
           
         }
   nodes.add({ id: "ins",fixed:true,x:0,y:0,label:"estacionamiento",color: "#C2FABC" }),
-                console.log(edges.get());
+              
 
 }else if(e==2&&archivo1listo==1){
   archivo2listo=0;
