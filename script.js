@@ -1,4 +1,6 @@
 // Variables Globales
+var archivo1listo=0;
+var archivo2listo=0;
 var ArrayArchivo1 = [];
 var ArrayArchivo2 = [];
 var ArrayauxiliarArchivo1 = [];
@@ -8,39 +10,14 @@ var ArrayIDTipo = [];
 var ArrayCoordenada = [];
 var ArrayIDCentroArchivo = [];
 var ArrayIDPuntoArchivo = [];
+var ArrayIDPuntoArchivo2 = [];
 var ArrayProductos = [];
-
+var nodes,edges;
 var container = document.getElementById("mynetwork");
-
-var nodes = new vis.DataSet([
-  
-]);
-
-var edges = new vis.DataSet([
-]);
-
-var nodes = new vis.DataSet([
-  { id: "ins", color: "#C2FABC", label: "Instalación"},
-  { id: "c1", color: "#fabcbc", label: "Centro de distribución 1"},
-  { id: "c2", color: "#fabcbc", label: "Centro de distribución 2"},
-  { id: "p1", label: "Punto de venta 1"},
-  { id: "p2", label: "Punto de venta 2"},
-  { id: "p3", label: "Punto de venta 3"},
-  { id: "p4", label: "Punto de venta 4"}
-]);
-
-var edges = new vis.DataSet([
-  { id: "ins-c1", from: "ins", to: "c1", label: "2" },
-  { id: "ins-c2", from: "ins", to: "c2", label: "4" },
-  { id: "c1-p1", from: "c1", to: "p1", label: "5" },
-  { id: "c1-p2", from: "c1", to: "p2", label: "1" },
-  { id: "c1-p3", from: "c1", to: "p3", label: "4" },
-  { id: "p1-p2", from: "p1", to: "p2", label: "3" },
-  { id: "p1-p3", from: "p1", to: "p3", label: "3" },
-  { id: "p2-p3", from: "p2", to: "p3", label: "3" },
-  { id: "c2-p4", from: "c2", to: "p4", label: "3" }
-]);
-
+ nodes = new vis.DataSet([
+     { id: "ins",fixed:true,x:0,y:0,label:"estacionamiento",color: "#C2FABC" },
+ ]);
+ edges = new vis.DataSet([]);
 
 data = {
   nodes: nodes,
@@ -72,9 +49,10 @@ function getKilometros(lat1, lon1, lat2, lon2) {
       Math.sin(dLong / 2);
   let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   let d = R * c;
-  return d.toFixed(5); //Retorna tres decimales
+  return d.toFixed(5); //Retorna 5 decimales
 }
 function kilometros(x1,x2,y1,y2){
+
   var auxx=x2-x1;
   var auxy=y2-y1;
   var aux=(auxx*auxx)+(auxy*auxy);
@@ -82,9 +60,10 @@ function kilometros(x1,x2,y1,y2){
   return resultado.toFixed(5);
 }
 
-console.log(getKilometros(lat1, long1, lat2, long2));
-
 function leerArchivo1(e) {
+    if(archivo1listo==1){
+      borrar(1);
+  }
   ArrayArchivo1 = [];
   ArrayauxiliarArchivo1 = [];
   ArrayTipo = [];
@@ -95,6 +74,7 @@ function leerArchivo1(e) {
   if (!archivo) {
     return;
   }
+  ocultarhojaderuta();
   let lector = new FileReader();
   lector.onload = function(e) {
     let contenido = e.target.result;
@@ -105,23 +85,64 @@ function leerArchivo1(e) {
       ArrayArchivo1[i] = ArrayArchivo1[i].replace(/["]/g, "");
       ArrayauxiliarArchivo1.push(ArrayArchivo1[i].split(";"));
     }
-
+    var alertaProductos = 0;
     for (let i = 0; i < ArrayauxiliarArchivo1.length; i++) {
+      var verificar = ArrayauxiliarArchivo1[i][2];
+      var coordenadas=verificar.split(",");
+      var coorx=coordenadas[0];
+      var coory=coordenadas[1];
+     // console.log(coordenadas);
+      
+      if (ArrayauxiliarArchivo1[i][0] != "P" && ArrayauxiliarArchivo1[i][0] != "C") {
+        alertaProductos = 1;
+        console.log(alertaProductos);
+        console.log(ArrayauxiliarArchivo1[i][0]);
+      } else if (isNaN(ArrayauxiliarArchivo1[i][1]) == true) {
+        alertaProductos = 2;
+      }
+      else if((isNaN(coorx)==true || isNaN(coory)==true)&&coordenadas.length!=2){
+        alertaProductos = 3;
+      }
+    }
+    if(alertaProductos==1){
+      alert("La primera parte del archivo debe ser una C de centro de distribucion o una P Punto de venta");
+      return;
+    }
+    else if(alertaProductos==2){
+      alert("La segunda parte del archivo debe ser un numero n que es cantidad de productos a repartir");
+      return;
+    }
+    else if(alertaProductos==3){
+      alert("Alguno de las dos no son cordenadas");
+      return;
+    }
+    else{
+      for (let i = 0; i < ArrayauxiliarArchivo1.length; i++) {
       ArrayTipo.push(ArrayauxiliarArchivo1[i][0]);
 
       ArrayIDTipo.push(ArrayauxiliarArchivo1[i][1]);
 
       ArrayCoordenada.push(ArrayauxiliarArchivo1[i][2]);
     }
+    
+    }
+      
+      
     CREARGRAFO();
-
+archivo1listo=1;
+     if(archivo1listo==1&&archivo2listo==1){
+      UNIRGRAFO();
+    }
+    
     console.log(ArrayArchivo1);
     console.log(ArrayauxiliarArchivo1);
 
     console.log(ArrayTipo);
     console.log(ArrayIDTipo);
     console.log("coordenada", ArrayCoordenada);
-    console.log('Nodos',nodes2.getIds());
+    console.log('Nodos',nodes.getIds());
+    
+    
   };
   lector.readAsText(archivo);
 }
@@ -135,17 +156,26 @@ document
   .getElementById("file-input")
   .addEventListener("change", leerArchivo1, false);
 
+
+
+
 function leerArchivo2(e) {
+  if(archivo2listo==1){
+      borrar(2);
+
+  }
+var alertaProductos;
   ArrayArchivo2 = [];
-  ArrayauxiliarArchivo = [];
+  ArrayauxiliarArchivo2 = [];
   ArrayIDCentroArchivo = [];
+    ArrayIDPuntoArchivo = [];
   ArrayIDPuntoArchivo2 = [];
   ArrayProductos = [];
   let archivo2 = e.target.files[0];
   if (!archivo2) {
     return;
   }
-
+ocultarhojaderuta();
   let lector = new FileReader();
   lector.onload = function(e) {
     let contenido2 = e.target.result;
@@ -164,27 +194,31 @@ function leerArchivo2(e) {
 
       ArrayProductos.push(ArrayauxiliarArchivo2[i][2]);
     }
-    UNIRGRAFO();
+    archivo2listo=1;
+    if(archivo1listo==1&&archivo2listo==1){
+      UNIRGRAFO();
+    }
+
     console.log(ArrayArchivo2);
-
     console.log(ArrayauxiliarArchivo2);
-
     console.log(ArrayIDCentroArchivo);
     console.log(ArrayIDPuntoArchivo);
+    console.log(ArrayIDPuntoArchivo2);
     console.log(ArrayProductos);
-    var alertaProductos=0;
+     alertaProductos=0;
     for (let i = 0; i < ArrayProductos.length; i++){
       if(ArrayProductos[i]%1!=0||ArrayProductos[i]<0||1000<ArrayProductos[i]){
          alertaProductos=1;
+break ;
       }
     }
-    console.log(alertaProductos);
-    if(alertaProductos==1){
-      alert("Existe al menos una cantidad incorrecta");
+     if(alertaProductos==1){
+    alert("Existe una cantidad mal ingresada,revise contenido de archivo");
+       return;
     }
-    console.log('Aristas',edges2.getIds());
+  }; 
+ console.log("f");
     
-  };   
   lector.readAsText(archivo2);
 }
 
@@ -307,7 +341,7 @@ if(borrar.length==0){
 function repetido(camino,recorrido){
   var repetido;
   for (let k = 0; k < recorrido.length; k++) {
-    if (vertice == recorrido[k]) {
+    if (camino== recorrido[k].id) {
       
       repetido = true;
       break;
@@ -317,21 +351,240 @@ function repetido(camino,recorrido){
   }
   return repetido;
 }
+function suma(valor){
+  //console.log(valor);
+  var cantidad=0;
+  for(let i=0;i<valor.length;i++){
+    cantidad=cantidad+valor[i];    
+  }
+  //console.log(valor);
+  //console.log(cantidad);
+  if(valor.length==0){
+    return 0;
+  }else{
+  return cantidad;
+  }
+}
+function centro() {
+  console.log(ArrayArchivo2);
+  console.log(ArrayIDCentroArchivo);
+  console.log(ArrayIDPuntoArchivo2);
+  console.log(ArrayProductos);
+  if (archivo1listo == 0 || archivo2listo == 0) {
+    alert("Deben estar ambos archivos subidos para usar esta opcion");
+    return;
+  }
+  mostrarhojaderuta();
+  creargrafo2();
 
+  console.log(ArrayIDCentroArchivo);
 
-var options = {
+  var obtenercentro = ArrayIDCentroArchivo;
+  var obtenernodos = nodes.getIds();
+  var centro = [];
+  let resultado = obtenercentro.reduce((a, e) => {
+    if (!a.find(d => d == e)) {
+      a.push(e);
+    }
+
+    return a;
+  }, []);
+  console.log(resultado);
+  console.log(resultado.length);
+  console.log(obtenernodos);
+
+  console.log(nodes.get("C" + resultado[0]));
+  for (let i = 0; i < resultado.length; i++) {
+    centro.push(nodes.get("C" + resultado[i]));
+    console.log(centro);
+  }
+  for (let j = 0; j < centro.length; j++) {
+    console.log(centro[j]);
+    console.log(centro.length);
+    recorridocamion(centro[j]);
+  }
+}
+function productospunto(valor){
+   console.log(ArrayIDPuntoArchivo);
+  console.log(valor);
+  for(let i=0;ArrayIDPuntoArchivo.length;i++){
+    
+    if(ArrayIDPuntoArchivo[i]==valor[1]){
+      console.log(parseInt(ArrayProductos[i]));
+      return parseInt(ArrayProductos[i]);
+    }
+  }
+ 
+}
+function recorridocamion(centro){
+  console.log(ArrayArchivo2);
+      console.log(ArrayIDCentroArchivo);
+    console.log(ArrayIDPuntoArchivo2);
+    console.log(ArrayProductos);
+  if(archivo1listo==0||archivo2listo==0){
+    alert("Deben estar ambos archivos subidos para usar esta opcion");
+    return;
+  }
+  
+  var camion=1000;
+  var cantcamiones=1;
+  var totalcantidad=0;
+  var auxproductos=0;
+  var recorrido=[];
+  var cantrecorrido=[];
+  var valorrecorrido=[];
+  var aristas=edges.get();
+  var caminos=aristas.filter(aristas => aristas.from == centro.id);
+  console.log(caminos);
+  var despliegeacentro=aristas.filter(aristas => aristas.to == centro.id);
+  var minimodistancia =caminos[0].label;
+  var minimo;
+  var auxdistancia;
+  var auxcamino;
+  
+  for(let o=0;o<ArrayProductos.length;o++){
+    for(let p=0;p<caminos.length;p++){
+    if(ArrayIDPuntoArchivo[o]==caminos[p].to[1]){
+    totalcantidad=totalcantidad+parseInt(ArrayProductos[o]);
+    }
+  }}
+  console.log(ArrayProductos);
+  console.log(valorrecorrido);
+  console.log(suma(valorrecorrido),"!=",totalcantidad);
+  while(suma(valorrecorrido)!=totalcantidad){
+     var minimodistancia =caminos[0].label;
+    
+    console.log("valorrecorrido=",suma(valorrecorrido));
+  
+  for(let i=0;i<ArrayIDPuntoArchivo.length;i++){
+    for(let j=0;j<caminos.length;j++){
+      console.log(minimodistancia);
+            console.log(ArrayIDPuntoArchivo[i]);
+
+            console.log(caminos[j].to[1]);
+     if(minimodistancia>=caminos[j].label && ArrayIDPuntoArchivo[i]==caminos[j].to[1] && repetido(caminos[j].to,recorrido)!=true){
+       minimodistancia=caminos[j].label;
+      minimo=nodes.get(caminos[j].to);
+      auxproductos=parseInt(ArrayProductos[i]);
+       unirgrafo2(centro,minimo,cantcamiones);
+     }
+    }
+  }
+    console.log(minimo);
+  recorrido.push(minimo.id);
+  cantrecorrido.push(minimodistancia);
+  if(camion-auxproductos<0){
+    var reserva=auxproductos-camion;
+    unirgrafo2(minimo,nodes2.get("ins"),cantcamiones);
+    cantcamiones++;
+    console.log("un camion ya entrego todos sus productos");
+    camion=1000;
+   
+  }else{
+    camion=camion-auxproductos;
+    valorrecorrido.push(productospunto(minimo.id));
+    console.log("valorrecorrido=",suma(valorrecorrido));
+  }
+  
+  while(suma(valorrecorrido)!=totalcantidad){
+     
+   if(reserva!=0){
+     if(camion-reserva<=0){
+       reserva=reserva-camion;
+       unirgrafo2(minimo,nodes2.get("ins"),cantcamiones);
+       cantcamiones++;
+       console.log("un camion ya entrego todos sus productos");
+       camion=1000;
+       
+       break;
+     }else{
+       camion=camion-reserva;
+       reserva=0;
+       console.log("se completo la entrega de un punto de venta");
+       valorrecorrido.push(productospunto(minimo.id));
+       console.log("valorrecorrido=",suma(valorrecorrido));
+     }
+   }else{
+     
+     var aux=minimo;
+     for(let m=0;m<caminos.length;m++){
+       if(minimo.id!=caminos[m].to){
+         auxcamino=nodes.get(caminos[m].to);
+         minimodistancia=kilometros(aux.x,auxcamino.x,aux.y,auxcamino.y);
+         break;
+       }
+     }
+    for(let i=0;i<ArrayIDPuntoArchivo.length;i++){
+      for(let j=0;j<caminos.length;j++){
+        auxcamino=nodes.get(caminos[j].to);
+        var distancia=kilometros(aux.x,auxcamino.x,aux.y,auxcamino.y);
+        if(minimodistancia>=distancia && ArrayIDPuntoArchivo[i]==caminos[j].to[1] && repetido(caminos[j].to,recorrido)!=true){
+     minimodistancia=caminos[j].label;
+          minimo=nodes.get(caminos[j].to);
+        auxproductos=parseInt(ArrayProductos[i]);
+        unirgrafo2(aux,minimo,cantcamiones);
+       }
+    }
+   }
+     console.log(minimo.id);
+  recorrido.push(minimo);
+  cantrecorrido.push(minimodistancia);
+     if(camion-auxproductos<0){
+      var reserva=auxproductos-camion;
+      unirgrafo2(minimo,nodes2.get("ins"),cantcamiones);
+      cantcamiones++;
+      console.log("un camion ya entrego todos sus productos");  
+       camion=1000;
+     }else{
+      camion=camion-auxproductos;
+       console.log("se completo la entrega de un punto de venta");
+       valorrecorrido.push(productospunto(minimo.id));
+       console.log("valorrecorrido=",suma(valorrecorrido));
+     }
+   }  
+    if(camion==1000){
+      break;
+    }
+   } 
+   
+  }
+  console.log(centro.id," cantidad de camiones=",cantcamiones,"y valorrecorrido=",suma(valorrecorrido));
+  console.log(recorrido);
+  //----------------------------------------------------
+  
+  
+  for(let h=0;h<cantcamiones;h++){
+    unirgrafo2(nodes2.get("ins"),centro,h+1);
+  }
+  if(cantcamiones==1){
+    unirgrafo2(minimo,nodes2.get("ins"),1);
+  }
+  
+  
+}
+function mostrarhojaderuta(){
+  document.getElementById('mynetwork2').style.display='block';
+  document.getElementById('Titulomynetwork2').style.display='block';
+}
+function ocultarhojaderuta(){
+  document.getElementById('mynetwork2').style.display='none';
+  document.getElementById('Titulomynetwork2').style.display='none';
+}
+var options = {//physics: false,
   manipulation: {
-    enabled: true,
+    enabled: false,
     addNode: false,
     addEdge: false,
     editEdge: false,
     deleteNode: false,
     deleteEdge: true
-  }
+  } 
+ 
 };
 
 
 var network = new vis.Network(container, data, options);
 network.setOptions(options);
+
 
 
